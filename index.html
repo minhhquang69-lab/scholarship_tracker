@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta name="theme-color" content="#2563eb"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="ScholarTrack"/>
+<link rel="manifest" href="manifest.json"/>
+<title>ScholarTrack</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#2563eb;--bl:#eff6ff;--green:#16a34a;--gl:#f0fdf4;--am:#d97706;--al:#fffbeb;--red:#dc2626;--rl:#fef2f2;--rm:#fecaca;--pu:#7c3aed;--pl:#f5f3ff;--s50:#f8fafc;--s100:#f1f5f9;--s200:#e2e8f0;--s400:#94a3b8;--s500:#64748b;--s600:#475569;--s700:#334155;--s800:#1e293b;--s900:#0f172a;--w:#fff}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--s50);color:var(--s800);font-size:14px;line-height:1.5}
+.lscr{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1d4ed8 0%,#2563eb 50%,#3b82f6 100%);padding:20px}
+.lbox{background:var(--w);border-radius:20px;padding:36px 32px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.2);text-align:center}
+.lic{width:60px;height:60px;background:var(--blue);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px}
+.lbox h2{font-size:22px;font-weight:800;color:var(--s900);margin-bottom:4px}
+.lsub{font-size:13px;color:var(--s500);margin-bottom:24px}
+.ai{width:100%;padding:10px 14px;border:1.5px solid var(--s200);border-radius:10px;font-size:14px;color:var(--s800);background:var(--w);outline:none;font-family:inherit;transition:border-color .15s;margin-bottom:10px;display:block}
+.ai:focus{border-color:var(--blue);box-shadow:0 0 0 3px #dbeafe}
+.w100{width:100%;margin-bottom:10px;justify-content:center}
+.gbtn{background:#fff;color:var(--s700);border:1.5px solid var(--s200)!important}.gbtn:hover{background:var(--s50)}
+.lsw{font-size:13px;color:var(--s500);margin-top:8px}
+.lsw a{color:var(--blue);text-decoration:none;font-weight:600}.lsw a:hover{text-decoration:underline}
+.aerr2{background:var(--rl);border:1px solid var(--rm);color:var(--red);font-size:12px;font-weight:600;padding:8px 12px;border-radius:8px;margin-bottom:12px;text-align:left}
+.aok{background:var(--gl);border:1px solid #86efac;color:var(--green);font-size:12px;font-weight:600;padding:8px 12px;border-radius:8px;margin-bottom:12px;text-align:left}
+.ldiv{display:flex;align-items:center;gap:10px;margin:8px 0;color:var(--s400);font-size:12px}
+.ldiv::before,.ldiv::after{content:"";flex:1;height:1px;background:var(--s200)}
+.loading{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--s500)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:32px;height:32px;border:3px solid var(--s200);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
+.hdr{background:var(--w);border-bottom:1px solid var(--s200);padding:12px 20px;position:sticky;top:0;z-index:100}
+.hdr-in{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-ic{width:34px;height:34px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;flex-shrink:0}
+.logo h1{font-size:15px;font-weight:700;color:var(--s900)}.logo p{font-size:11px;color:var(--s500)}
+.ha{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-p{background:var(--blue);color:#fff}.btn-p:hover{background:#1d4ed8}
+.btn-o{background:var(--w);color:var(--s600);border:1px solid var(--s200)}.btn-o:hover{background:var(--s50)}
+.btn-d{background:var(--w);color:var(--s600);border:1px solid var(--s200)}.btn-d.act{background:var(--blue);color:#fff;border-color:var(--blue)}
+.udrop{position:relative}
+.uav{width:32px;height:32px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;cursor:pointer;flex-shrink:0;user-select:none}
+.umenu{position:absolute;right:0;top:40px;background:var(--w);border:1px solid var(--s200);border-radius:12px;padding:12px;min-width:200px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200}
+.uemail{font-size:12px;color:var(--s500);word-break:break-all;margin-bottom:8px;font-weight:600}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.pulse{animation:pulse 1.5s infinite}
+.upill{display:flex;align-items:center;gap:5px;background:var(--rl);border:1px solid var(--rm);color:var(--red);font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px;cursor:pointer}
+.nbtn{background:var(--s100);border:1px solid var(--s200);color:var(--s600);font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px;cursor:pointer}
+.nbtn.ok{background:#dcfce7;border-color:#86efac;color:var(--green)}.nbtn.no{background:var(--rl);border-color:var(--rm);color:var(--red)}
+.clk{font-size:11px;color:var(--s400);font-variant-numeric:tabular-nums;display:none}
+.main{max-width:900px;margin:0 auto;padding:20px}
+.sy>*+*{margin-top:14px}
+.ab{background:var(--rl);border:1px solid var(--rm);border-radius:12px;padding:14px 16px;display:flex;gap:12px}
+.ab h4{font-size:13px;font-weight:700;color:#991b1b;margin-bottom:4px}
+.ab ul{list-style:none}.ab li{font-size:12px;color:var(--red);margin-top:2px}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--s800);color:#fff;font-size:12px;font-weight:600;padding:8px 16px;border-radius:8px;z-index:9999;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.card{background:var(--w);border:1px solid var(--s200);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
+.card.uc{border-color:#fca5a5}
+.ch{padding:14px 18px 10px;cursor:pointer;user-select:none;display:flex;align-items:center;gap:10px}.ch:hover{background:var(--s50)}
+.cb{padding:0 18px 18px}
+.ct{padding:14px 18px 10px;font-size:14px;font-weight:600;color:var(--s700);border-bottom:1px solid var(--s100);display:flex;align-items:center;justify-content:space-between}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700}
+.b-r{background:var(--s100);color:var(--s600)}.b-p{background:var(--bl);color:var(--blue)}.b-a{background:var(--al);color:var(--am)}.b-i{background:var(--pl);color:var(--pu)}.b-ac{background:var(--gl);color:var(--green)}.b-rj{background:var(--rl);color:var(--red)}.b-w{background:#f3f4f6;color:#6b7280}.b-u{background:var(--rl);color:var(--red)}
+.p1{color:var(--red);font-weight:700}.p2{color:var(--am);font-weight:700}.p3{color:var(--s400);font-weight:700}
+hr.sp{border:none;border-top:1px solid var(--s100);margin:10px 0}
+.cc{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;font-variant-numeric:tabular-nums}
+.c-ex{background:#fee2e2;color:var(--red)}.c-to{background:#fee2e2;color:var(--red)}.c-ur{background:var(--rl);color:var(--red)}.c-so{background:var(--al);color:var(--am)}.c-no{background:var(--s100);color:var(--s500)}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fg label{display:block;font-size:11px;font-weight:700;color:var(--s500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.fg input,.fg select,.fg textarea,.fi{width:100%;padding:8px 12px;border:1.5px solid var(--s200);border-radius:8px;font-size:13px;color:var(--s800);background:var(--w);outline:none;font-family:inherit;transition:border-color .15s}
+.fg input:focus,.fg select:focus,.fg textarea:focus,.fi:focus{border-color:var(--blue);box-shadow:0 0 0 3px #dbeafe}
+.fg textarea{resize:none}
+.cbr{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px}
+.cbr input[type=checkbox]{width:15px;height:15px;accent-color:var(--blue);cursor:pointer}
+.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.it{background:var(--s50);border-radius:10px;padding:10px 12px}
+.it-l{font-size:10px;font-weight:700;color:var(--s400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.it-v{font-size:12px;font-weight:600;color:var(--s800)}
+.rt{display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;cursor:pointer;padding:4px 0;text-align:left}
+.rt-l{font-size:11px;font-weight:700;color:var(--s500);text-transform:uppercase;letter-spacing:.05em}
+.rt-c{font-size:11px;color:var(--s400)}
+.rpb{flex:1;background:var(--s100);border-radius:999px;height:6px;max-width:160px;overflow:hidden}
+.rpf{height:100%;border-radius:999px;background:var(--blue);transition:width .3s}
+.rl2{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.ri{display:flex;align-items:flex-start;gap:8px;background:var(--s50);border-radius:8px;padding:8px 10px}
+.ri-n{font-size:12px;font-weight:600;color:var(--s700)}.ri-n.dn{text-decoration:line-through;color:var(--s400)}
+.ri-nt{font-size:11px;color:var(--s400);margin-top:2px}
+.rss{font-size:11px;border:1px solid var(--s200);border-radius:6px;padding:3px 5px;background:var(--w);cursor:pointer;font-weight:600;flex-shrink:0}
+.rss.not_started{color:var(--s400)}.rss.in_progress{color:var(--am)}.rss.completed{color:var(--green)}
+.nb{background:var(--al);border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
+.nb-l{font-size:11px;font-weight:700;color:var(--am);margin-bottom:4px}.nb-t{font-size:12px;color:#92400e}
+.ca{display:flex;align-items:center;gap:8px;margin-top:8px}
+.lbtn{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--blue);font-weight:600;text-decoration:none}.lbtn:hover{text-decoration:underline}
+.abtn{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:5px 10px;border-radius:6px;border:none;cursor:pointer;font-weight:600;background:none}
+.abtn.ed{color:var(--s500)}.abtn.ed:hover{background:var(--s100);color:var(--s700)}
+.abtn.dl{color:#f87171}.abtn.dl:hover{background:var(--rl);color:var(--red)}
+.sp2{flex:1}
+.qs{display:flex;align-items:center;gap:8px}
+.qs label{font-size:12px;font-weight:600;color:var(--s500)}
+.qss{font-size:12px;border:1px solid var(--s200);border-radius:8px;padding:4px 8px;background:var(--w);cursor:pointer;font-weight:600}
+.fb{background:var(--w);border:1px solid var(--s200);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fb label{font-size:11px;font-weight:700;color:var(--s500);text-transform:uppercase;letter-spacing:.05em}
+.fb select{font-size:12px;border:1px solid var(--s200);border-radius:8px;padding:4px 8px;background:var(--w);cursor:pointer}
+.fc{font-size:12px;color:var(--s400)}
+.es{text-align:center;padding:50px 20px;color:var(--s400)}.es-ic{font-size:40px;margin-bottom:10px;opacity:.3}
+.kg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kc{background:var(--w);border:1px solid var(--s200);border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex;align-items:center;gap:10px}
+.ki{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ki.bl{background:#dbeafe}.ki.gr{background:#dcfce7}.ki.am{background:#fef3c7}.ki.rd{background:var(--rl)}
+.kv{font-size:22px;font-weight:800;color:var(--s900)}.kv.gr{color:var(--green)}.kv.am{color:var(--am)}.kv.rd{color:var(--red)}
+.kl{font-size:11px;color:var(--s500)}
+.sbr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sbl{font-size:12px;font-weight:600;width:90px;flex-shrink:0}
+.sbt{flex:1;background:var(--s100);border-radius:999px;height:8px;overflow:hidden}
+.sbf{height:100%;border-radius:999px;transition:width .4s}
+.sbc{font-size:11px;color:var(--s500);width:16px;text-align:right}
+.or{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--s50);border-radius:10px;margin-bottom:6px}.or:hover{background:var(--s100)}
+.on{flex:1;min-width:0}.on h4{font-size:13px;font-weight:700;color:var(--s900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.on p{font-size:11px;color:var(--s500)}
+.op{text-align:right;min-width:65px}.op-l{font-size:11px;font-weight:600;color:var(--s600)}
+.op-b{width:65px;height:5px;background:var(--s200);border-radius:999px;overflow:hidden;margin-top:3px}
+.op-f{height:100%;border-radius:999px;background:var(--blue)}
+.rfi{display:flex;align-items:center;gap:8px;background:var(--s50);border-radius:8px;padding:7px 10px;margin-bottom:6px}
+.rfi input{flex:1;padding:5px 8px;border:1px solid var(--s200);border-radius:6px;font-size:12px;background:var(--w);outline:none}.rfi input:focus{border-color:var(--blue)}
+.rfi select{font-size:11px;border:1px solid var(--s200);border-radius:6px;padding:4px;background:var(--w)}
+.rrm{background:none;border:none;color:#f87171;cursor:pointer;font-size:16px;line-height:1}
+.sc{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--green);font-weight:600}
+.so{font-size:11px;color:var(--blue);margin-top:2px}
+.fr2{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px}
+.fin{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.cm{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px}.cm span{font-size:11px;color:var(--s500)}
+.hp{text-align:right}.hp-l{font-size:11px;color:var(--s500)}
+.hp-b{width:72px;height:5px;background:var(--s100);border-radius:999px;overflow:hidden;margin-top:3px}
+.hp-f{height:100%;border-radius:999px;background:var(--blue)}
+.chv{color:var(--s400);font-size:14px;flex-shrink:0;transition:transform .2s}.chv.op{transform:rotate(180deg)}
+.ssub{font-size:11px;font-weight:700;color:var(--s500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;margin-top:12px}
+.arb{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 10px;border:1px solid var(--s200);border-radius:6px;background:var(--w);cursor:pointer;font-weight:600;color:var(--s600)}
+.ssr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.fa{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--s100)}
+.nl{position:fixed;top:70px;right:16px;width:290px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.nt{background:var(--w);border:1px solid var(--rm);border-left:4px solid var(--red);border-radius:10px;padding:12px 14px;box-shadow:0 4px 12px rgba(0,0,0,.1);pointer-events:auto}
+@keyframes sli{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}.nt{animation:sli .3s ease}
+.nt-t{font-size:12px;font-weight:700;color:var(--red);margin-bottom:3px}.nt-b{font-size:12px;color:var(--s600)}
+.nt-cl{float:right;background:none;border:none;cursor:pointer;color:var(--s400);font-size:14px;margin-top:-2px}
+.hms{font-size:11px;color:var(--s400);font-variant-numeric:tabular-nums;margin-top:2px}
+.hidden{display:none!important}
+@media(max-width:640px){.fg,.ig{grid-template-columns:1fr}.kg{grid-template-columns:1fr 1fr}.hp{display:none}.nl{width:calc(100vw - 32px)}.clk{display:none}.btn-d span{display:none}}
+@media(min-width:641px){.clk{display:block}}
+</style>
+</head>
+<body>
+
+<div id="ldg" class="loading"><div class="spinner"></div><span>Loading...</span></div>
+
+<!-- ── LOGIN ── -->
+<div id="lscr" class="lscr hidden">
+  <div class="lbox">
+    <div class="lic">🎓</div>
+    <h2>ScholarTrack</h2>
+    <p class="lsub">Register to request access · Admin approval required</p>
+    <div id="aerr" class="hidden"></div>
+    <div id="lf">
+      <input type="email" id="ae" class="ai" placeholder="Email address" autocomplete="email"/>
+      <input type="password" id="apw" class="ai" placeholder="Password" autocomplete="current-password"/>
+      <button class="btn btn-p w100" onclick="doSI()">Sign In</button>
+      <div class="ldiv">or</div>
+      <button class="btn gbtn w100" onclick="doGoogle()">
+        <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>
+        Continue with Google
+      </button>
+      <div class="lsw"><a href="#" onclick="showReg()">Create an account</a> &nbsp;·&nbsp; <a href="#" onclick="doForgot()">Forgot password?</a></div>
+    </div>
+    <div id="rf" class="hidden">
+      <input type="email" id="re" class="ai" placeholder="Email address" autocomplete="email"/>
+      <input type="password" id="rpw" class="ai" placeholder="Password (min 6 chars)" autocomplete="new-password"/>
+      <input type="password" id="rpw2" class="ai" placeholder="Confirm password" autocomplete="new-password"/>
+      <button class="btn btn-p w100" onclick="doReg()">Request Access</button>
+      <div class="lsw"><a href="#" onclick="showLg()">Already have an account? Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PENDING APPROVAL SCREEN ── -->
+<div id="pscr" class="lscr hidden">
+  <div class="lbox">
+    <div class="lic" style="background:#f59e0b">⏳</div>
+    <h2>Awaiting Approval</h2>
+    <p class="lsub">Your request has been received</p>
+    <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:12px;padding:16px;text-align:left;margin-bottom:16px">
+      <p style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:6px">Account: <span id="pemail" style="font-weight:400"></span></p>
+      <p style="font-size:12px;color:#78350f;line-height:1.6">Your account is <strong>pending admin approval</strong>. You will be able to log in once the admin approves your request. Please contact the admin if you need urgent access.</p>
+    </div>
+    <div style="background:var(--s50);border-radius:10px;padding:12px;font-size:12px;color:var(--s500);text-align:left;margin-bottom:16px">
+      <strong>What happens next:</strong><br/>
+      1. Admin sees your request in Firebase Console<br/>
+      2. Admin changes your status to "approved"<br/>
+      3. You can then sign in normally
+    </div>
+    <button class="btn btn-o w100" onclick="doSO()">Sign Out</button>
+  </div>
+</div>
+
+<div class="nl" id="nl"></div>
+<div class="toast" id="toast"></div>
+
+<!-- ── MAIN APP ── -->
+<div id="app" class="hidden">
+  <div class="hdr">
+    <div class="hdr-in">
+      <div class="logo"><div class="logo-ic">🎓</div><div><h1>ScholarTrack</h1><p id="tc">Loading...</p></div></div>
+      <div class="ha">
+        <span class="clk" id="clk"></span>
+        <div id="up" class="upill hidden" onclick="scrollToAlerts()"><span class="pulse">🔔</span><span id="ut"></span></div>
+        <button class="nbtn" id="nbtn" onclick="reqNotif()">🔔 Alerts</button>
+        <button class="btn btn-d" id="tvb" onclick="toggleView()">📊 <span>Dashboard</span></button>
+        <button class="btn btn-p" onclick="openAdd()">+ Add</button>
+        <div class="udrop">
+          <div class="uav" onclick="togUMenu()" title="Account">👤</div>
+          <div class="umenu hidden" id="umenu">
+            <div class="uemail" id="uemail"></div>
+            <hr style="margin:6px 0;border:none;border-top:1px solid var(--s200)"/>
+            <button class="btn btn-o" style="width:100%;justify-content:center" onclick="doSO()">Sign Out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="sy" id="top">
+      <div id="ab" class="ab hidden"><div style="font-size:18px;flex-shrink:0;margin-top:1px">⚠️</div><div><h4>Upcoming Deadlines — Action Required</h4><ul id="al"></ul></div></div>
+      <div id="fc2" class="card hidden">
+        <div class="ct"><span id="ft">➕ Add Scholarship</span><button style="background:none;border:none;cursor:pointer;font-size:18px;color:#94a3b8" onclick="closeForm()">✕</button></div>
+        <div class="cb" style="padding-top:14px">
+          <input type="hidden" id="eid"/>
+          <div class="fg">
+            <div><label>Scholarship Name *</label><input id="fn" placeholder="e.g. Chevening"/></div>
+            <div><label>Country</label><input id="fco" placeholder="e.g. UK"/></div>
+            <div><label>University</label><input id="fu" placeholder="e.g. Oxford"/></div>
+            <div><label>Programme</label><input id="fp" placeholder="e.g. MSc CS"/></div>
+            <div><label>Deadline</label><input id="fd" type="date"/></div>
+            <div><label>Priority</label><select id="fpr"><option value="1">High (1)</option><option value="2" selected>Medium (2)</option><option value="3">Low (3)</option></select></div>
+            <div><label>Progress Status</label><select id="fss"><option value="researching">Researching</option><option value="preparing">Preparing</option><option value="applied">Applied</option><option value="interviewed">Interviewed</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="withdrawn">Withdrawn</option></select></div>
+            <div><label>Website Link</label><input id="fl" type="url" placeholder="https://..."/></div>
+          </div>
+          <div style="margin-top:12px"><div class="ssub">Financial Support</div><div class="fr2"><label class="cbr"><input type="checkbox" id="ftu"/> Tuition covered</label><label class="cbr"><input type="checkbox" id="fst"/> Living stipend</label></div><div class="fin"><input id="fsa" class="fi" placeholder="Stipend amount (e.g. £1,200/mo)"/><input id="fos" class="fi" placeholder="Other support"/></div></div>
+          <div style="margin-top:12px"><div class="ssr"><div class="ssub" style="margin:0">Requirements</div><button class="arb" onclick="addFR()">+ Add</button></div><div id="frl"></div><p id="fre" class="hidden" style="font-size:12px;color:var(--s400);font-style:italic">No requirements yet.</p></div>
+          <div style="margin-top:12px"><div class="ssub">Notes</div><textarea id="fno" rows="2" class="fi" placeholder="Personal notes..."></textarea></div>
+          <div class="fa"><button class="btn btn-o" onclick="closeForm()">Cancel</button><button class="btn btn-p" onclick="saveS()">💾 Save</button></div>
+        </div>
+      </div>
+      <div id="dv" class="hidden sy">
+        <div class="kg"><div class="kc"><div class="ki bl">🏆</div><div><div class="kv" id="kt">0</div><div class="kl">Total</div></div></div><div class="kc"><div class="ki gr">✅</div><div><div class="kv gr" id="ka">0</div><div class="kl">Accepted</div></div></div><div class="kc"><div class="ki am">⏳</div><div><div class="kv am" id="kr">0</div><div class="kl">In Review</div></div></div><div class="kc"><div class="ki rd">⚠️</div><div><div class="kv rd" id="ku">0</div><div class="kl">Urgent</div></div></div></div>
+        <div class="card"><div class="ct" style="display:block">Status Breakdown</div><div class="cb" style="padding-top:12px" id="sb"></div></div>
+        <div class="card"><div class="ct" style="display:block">All Scholarships</div><div class="cb" style="padding-top:12px" id="ol"></div></div>
+      </div>
+      <div id="lv" class="sy">
+        <div class="fb"><label>Filter:</label><select id="fst2" onchange="renderList()"><option value="all">All statuses</option><option value="researching">Researching</option><option value="preparing">Preparing</option><option value="applied">Applied</option><option value="interviewed">Interviewed</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="withdrawn">Withdrawn</option></select><select id="fpr2" onchange="renderList()"><option value="all">All priorities</option><option value="1">High</option><option value="2">Medium</option><option value="3">Low</option></select><span class="fc" id="fct"></span></div>
+        <div id="sl"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey:            "AIzaSyCK-ktEcb7LycI7Em3Wp0N3QOOC2IWKVxs",
+  authDomain:        "scholarship-tracker-b2fd1.firebaseapp.com",
+  projectId:         "scholarship-tracker-b2fd1",
+  storageBucket:     "scholarship-tracker-b2fd1.firebasestorage.app",
+  messagingSenderId: "343031687168",
+  appId:             "1:343031687168:web:adfb43292e5517ec5790e5",
+  measurementId:     "G-DRPZ3LBRXC"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.firestore();
+db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
+
+let currentUser=null, unsubSnap=null, scholarships=[], ec={}, er={}, fr=[], cv="list";
+
+// ── AUTH STATE: checks approval before letting user in ──
+auth.onAuthStateChanged(async u=>{
+  document.getElementById("ldg").classList.add("hidden");
+  if(u){
+    try{
+      const ap = await db.collection("approvals").doc(u.uid).get();
+      if(!ap.exists || ap.data().status !== "approved"){
+        // Save/update pending request record
+        db.collection("approvals").doc(u.uid).set({
+          email: u.email||"",
+          uid: u.uid,
+          status: "pending",
+          requestedAt: firebase.firestore.FieldValue.serverTimestamp()
+        },{merge:true});
+        // Show pending screen
+        document.getElementById("lscr").classList.add("hidden");
+        document.getElementById("app").classList.add("hidden");
+        document.getElementById("pscr").classList.remove("hidden");
+        document.getElementById("pemail").textContent = u.email||u.displayName||"";
+        return;
+      }
+    }catch(e){}
+    // Approved — enter app
+    currentUser=u;
+    document.getElementById("lscr").classList.add("hidden");
+    document.getElementById("pscr").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    document.getElementById("uemail").textContent=u.email||u.displayName||"User";
+    initApp();
+  } else {
+    if(unsubSnap){unsubSnap();unsubSnap=null;}
+    currentUser=null;scholarships=[];ec={};er={};
+    document.getElementById("pscr").classList.add("hidden");
+    document.getElementById("lscr").classList.remove("hidden");
+    document.getElementById("app").classList.add("hidden");
+  }
+});
+
+function doSI(){const e=g("ae"),p=g("apw");if(!e||!p)return aerr("Please fill in both fields.");auth.signInWithEmailAndPassword(e,p).catch(x=>aerr(ferr(x)));}
+function doReg(){const e=g("re"),p=g("rpw"),p2=g("rpw2");if(!e||!p)return aerr("Please fill in all fields.");if(p!==p2)return aerr("Passwords do not match.");if(p.length<6)return aerr("Password must be at least 6 characters.");auth.createUserWithEmailAndPassword(e,p).catch(x=>aerr(ferr(x)));}
+function doGoogle(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(x=>aerr(ferr(x)));}
+function doForgot(){const e=g("ae");if(!e)return aerr("Enter your email address first.");auth.sendPasswordResetEmail(e).then(()=>aerr("Password reset email sent! Check your inbox.",true)).catch(x=>aerr(ferr(x)));}
+function doSO(){auth.signOut();}
+function ferr(x){const m={"auth/user-not-found":"No account found with that email.","auth/wrong-password":"Incorrect password.","auth/invalid-credential":"Invalid email or password.","auth/email-already-in-use":"That email is already registered.","auth/invalid-email":"Invalid email format.","auth/too-many-requests":"Too many attempts. Please try again later."};return m[x.code]||x.message;}
+function aerr(msg,ok){const el=document.getElementById("aerr");el.textContent=msg;el.className=ok?"aok":"aerr2";el.classList.remove("hidden");}
+function showReg(){document.getElementById("lf").classList.add("hidden");document.getElementById("rf").classList.remove("hidden");document.getElementById("aerr").classList.add("hidden");}
+function showLg(){document.getElementById("rf").classList.add("hidden");document.getElementById("lf").classList.remove("hidden");document.getElementById("aerr").classList.add("hidden");}
+function togUMenu(){document.getElementById("umenu").classList.toggle("hidden");}
+document.addEventListener("click",e=>{if(!e.target.closest(".udrop"))document.getElementById("umenu").classList.add("hidden");});
+function g(id){return document.getElementById(id).value.trim();}
+
+function scholRef(){return db.collection("users").doc(currentUser.uid).collection("scholarships");}
+function uiDocRef(){return db.collection("users").doc(currentUser.uid);}
+function initApp(){
+  uiDocRef().get().then(d=>{if(d.exists){const dat=d.data();ec=dat.ec||{};er=dat.er||{};}});
+  unsubSnap=scholRef().onSnapshot(snap=>{scholarships=snap.docs.map(d=>({id:d.id,...d.data()}));updAlerts();renderAll();},()=>{});
+}
+function saveScholarship(s){if(!currentUser)return;const{id,...data}=s;scholRef().doc(id).set(data).then(()=>showToast("✅ Saved")).catch(()=>{});}
+function deleteFromDb(id){if(!currentUser)return;scholRef().doc(id).delete().catch(()=>{});}
+function saveUI(){if(!currentUser)return;uiDocRef().set({ec,er},{merge:true}).catch(()=>{});}
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800);}
+
+const SCFG={researching:{l:"Researching",bc:"b-r",col:"#94a3b8"},preparing:{l:"Preparing",bc:"b-p",col:"#3b82f6"},applied:{l:"Applied",bc:"b-a",col:"#f59e0b"},interviewed:{l:"Interviewed",bc:"b-i",col:"#a855f7"},accepted:{l:"Accepted",bc:"b-ac",col:"#22c55e"},rejected:{l:"Rejected",bc:"b-rj",col:"#ef4444"},withdrawn:{l:"Withdrawn",bc:"b-w",col:"#9ca3af"}};
+function dl(d){if(!d)return null;const t=new Date();t.setHours(0,0,0,0);const x=new Date(d);x.setHours(0,0,0,0);return Math.ceil((x-t)/86400000)}
+function msDD(d){if(!d)return null;const x=new Date(d);x.setHours(0,0,0,0);return x-new Date()}
+function midMs(){const n=new Date(),m=new Date(n);m.setHours(24,0,0,0);return m-n}
+function chip(d){const v=dl(d);if(v===null)return"";if(v<0)return`<span class="cc c-ex">💀 Expired</span>`;if(v===0)return`<span class="cc c-to pulse">🚨 TODAY</span>`;if(v===1)return`<span class="cc c-ur">🔥 Tomorrow!</span>`;if(v<=7)return`<span class="cc c-ur">⚠️ ${v}d left</span>`;if(v<=30)return`<span class="cc c-so">🕐 ${v}d left</span>`;return`<span class="cc c-no">📅 ${v}d left</span>`}
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function rp(rs){if(!rs||!rs.length)return 0;return Math.round(rs.filter(r=>r.status==="completed").length/rs.length*100)}
+let np=Notification.permission;
+function updNBtn(){const b=document.getElementById("nbtn");if(np==="granted"){b.textContent="🔔 ON";b.className="nbtn ok";}else if(np==="denied"){b.textContent="🔕";b.className="nbtn no";}else{b.textContent="🔔 Alerts";b.className="nbtn";}}
+function reqNotif(){if(np==="denied"){alert("Notifications blocked in your browser settings.");return;}if(np==="granted"){alert("Notifications are already enabled!");return;}Notification.requestPermission().then(p=>{np=p;updNBtn();if(p==="granted")checkNotifs();});}
+function checkNotifs(){const today=new Date().toISOString().slice(0,10),sk="ns_"+(currentUser?currentUser.uid:"")+today;const sent=new Set(JSON.parse(localStorage.getItem(sk)||"[]"));scholarships.forEach(s=>{if(["accepted","rejected","withdrawn"].includes(s.status))return;const d=dl(s.deadline);if(d===null||d<0)return;const nid=s.id+"_"+today;if(sent.has(nid))return;let msg="";if(d===0)msg="🚨 DEADLINE IS TODAY!";else if(d===1)msg="🔥 Deadline is TOMORROW!";else if(d===3)msg="⚠️ 3 days left.";else if(d===7)msg="📅 1 week left.";else if(d===14)msg="📅 2 weeks left.";else if(d===30)msg="📅 1 month left.";if(msg){sent.add(nid);inAppN(s.name,msg+" Deadline: "+s.deadline);if(np==="granted"){try{new Notification("🎓 "+s.name,{body:msg+"\n"+s.deadline,tag:nid,requireInteraction:d<=1});}catch(e){}}}});localStorage.setItem(sk,JSON.stringify([...sent]));}
+function inAppN(title,body){const log=document.getElementById("nl");const el=document.createElement("div");el.className="nt";el.innerHTML=`<button class="nt-cl" onclick="this.parentElement.remove()">✕</button><div class="nt-t">🔔 ${esc(title)}</div><div class="nt-b">${esc(body)}</div>`;log.appendChild(el);setTimeout(()=>{if(el.parentElement)el.remove();},8000);}
+function updClk(){const n=new Date();document.getElementById("clk").textContent=n.toLocaleDateString("en-GB",{weekday:"short",day:"2-digit",month:"short",year:"numeric"})+" "+n.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",second:"2-digit"});}
+function updAlerts(){const urg=scholarships.filter(s=>{const d=dl(s.deadline);return d!==null&&d>=0&&d<=30&&!["accepted","rejected","withdrawn"].includes(s.status)}).sort((a,b)=>dl(a.deadline)-dl(b.deadline));const imm=urg.filter(s=>dl(s.deadline)<=14);document.getElementById("ab").classList.toggle("hidden",!urg.length);if(urg.length)document.getElementById("al").innerHTML=urg.map(s=>{const d=dl(s.deadline);return`<li>${d===0?"🚨":d===1?"🔥":d<=7?"⚠️":"🕐"} <strong>${esc(s.name)}</strong> — ${d===0?"TODAY":d===1?"Tomorrow":d+" days left"} (${s.deadline})</li>`}).join("");document.getElementById("up").classList.toggle("hidden",!imm.length);if(imm.length)document.getElementById("ut").textContent=imm.length+" deadline"+(imm.length>1?"s":"")+" within 14 days";document.getElementById("tc").textContent=scholarships.length+" scholarship"+(scholarships.length!==1?"s":"");}
+function scrollToAlerts(){document.getElementById("ab").scrollIntoView({behavior:"smooth"});}
+function toggleView(){cv=cv==="list"?"summary":"list";const b=document.getElementById("tvb");if(cv==="summary"){document.getElementById("lv").classList.add("hidden");document.getElementById("dv").classList.remove("hidden");b.querySelector("span").textContent="List";b.classList.add("act");renderDash();}else{document.getElementById("lv").classList.remove("hidden");document.getElementById("dv").classList.add("hidden");b.querySelector("span").textContent="Dashboard";b.classList.remove("act");renderList();}}
+function renderDash(){const tot=scholarships.length;document.getElementById("kt").textContent=tot;document.getElementById("ka").textContent=scholarships.filter(s=>s.status==="accepted").length;document.getElementById("kr").textContent=scholarships.filter(s=>s.status==="applied"||s.status==="interviewed").length;document.getElementById("ku").textContent=scholarships.filter(s=>{const d=dl(s.deadline);return d!==null&&d>=0&&d<=14}).length;document.getElementById("sb").innerHTML=Object.entries(SCFG).map(([k,v])=>{const c=scholarships.filter(s=>s.status===k).length;const p=tot>0?Math.round(c/tot*100):0;return`<div class="sbr"><span class="sbl" style="color:${v.col}">${v.l}</span><div class="sbt"><div class="sbf" style="width:${p}%;background:${v.col}"></div></div><span class="sbc">${c}</span></div>`}).join("");const so=[...scholarships].sort((a,b)=>a.priority-b.priority);document.getElementById("ol").innerHTML=so.length?so.map(s=>{const p2=rp(s.requirements);const cfg=SCFG[s.status];return`<div class="or"><span class="p${s.priority}" style="width:22px;flex-shrink:0">P${s.priority}</span><div class="on"><h4>${esc(s.name)}</h4><p>${esc(s.university)}${s.country?" • "+esc(s.country):""}</p></div><div class="op"><div class="op-l">${p2}% done</div><div class="op-b"><div class="op-f" style="width:${p2}%"></div></div></div><span class="badge ${cfg.bc}">${cfg.l}</span>${chip(s.deadline)}</div>`}).join(""):`<p style="text-align:center;color:var(--s400);padding:16px">No scholarships yet.</p>`;}
+function renderList(){const fs=document.getElementById("fst2").value,fp=document.getElementById("fpr2").value;let f=scholarships.filter(s=>(fs==="all"||s.status===fs)&&(fp==="all"||String(s.priority)===fp)).sort((a,b)=>a.priority!==b.priority?a.priority-b.priority:(dl(a.deadline)??9999)-(dl(b.deadline)??9999));document.getElementById("fct").textContent=f.length+" result"+(f.length!==1?"s":"");const c=document.getElementById("sl");if(!f.length){c.innerHTML=`<div class="es"><div class="es-ic">🎓</div><p>No scholarships found. Add your first one!</p></div>`;return;}c.innerHTML=f.map(s=>renderCard(s)).join("");}
+function renderCard(s){const ex=!!ec[s.id],re2=!!er[s.id],p=rp(s.requirements),cfg=SCFG[s.status];const d=dl(s.deadline),iu=d!==null&&d>=0&&d<=7&&!["applied","accepted","rejected","withdrawn"].includes(s.status);const req=s.requirements||[];const cr=req.filter(r=>r.status==="completed").length;let body="";if(ex){let cd="";if(s.deadline){const v2=dl(s.deadline);const ms=msDD(s.deadline);if(v2!==null&&v2>=0&&v2<=7&&ms>0){const ts=Math.floor(ms/1000),hh=Math.floor(ts/3600)%24,mm2=Math.floor(ts/60)%60,ss=ts%60;cd=`<div>${chip(s.deadline)}<div class="hms" id="hms-${s.id}">⏱ ${String(hh).padStart(2,"0")}h ${String(mm2).padStart(2,"0")}m ${String(ss).padStart(2,"0")}s remaining</div></div>`}else if(v2!==null)cd=chip(s.deadline);}const ri=req.map(r=>`<div class="ri"><select class="rss ${r.status}" onchange="updRq('${s.id}','${r.id}',this.value)"><option value="not_started" ${r.status==="not_started"?"selected":""}>○ Not started</option><option value="in_progress" ${r.status==="in_progress"?"selected":""}>◑ In progress</option><option value="completed" ${r.status==="completed"?"selected":""}>● Completed</option></select><div style="flex:1;min-width:0"><div class="ri-n ${r.status==="completed"?"dn":""}">${r.name?esc(r.name):'<i style="color:var(--s400)">Unnamed</i>'}</div>${r.note?`<div class="ri-nt">${esc(r.note)}</div>`:""}</div></div>`).join("");const nt=s.notes?`<div class="nb"><div class="nb-l">Notes</div><div class="nb-t">${esc(s.notes)}</div></div>`:"";body=`<div class="cb"><hr class="sp"/><div class="ig">${s.programme?`<div class="it"><div class="it-l">Programme</div><div class="it-v">${esc(s.programme)}</div></div>`:""}${s.deadline?`<div class="it"><div class="it-l">Deadline</div><div class="it-v">${esc(s.deadline)}<br/>${cd}</div></div>`:""}<div class="it"><div class="it-l">Financial</div>${s.tuitionCovered?`<div class="sc">✅ Tuition</div>`:""}${s.livingStipend?`<div class="sc">✅ Stipend${s.stipendAmount?" ("+esc(s.stipendAmount)+")":""}</div>`:""}${!s.tuitionCovered&&!s.livingStipend?`<span style="font-size:12px;color:var(--s400)">Not specified</span>`:""}${s.otherSupport?`<div class="so">${esc(s.otherSupport)}</div>`:""}</div></div><div style="margin-top:12px"><button class="rt" onclick="togRq('${s.id}')"><span class="rt-l">Requirements</span><span class="rt-c">(${cr}/${req.length})</span><div class="rpb"><div class="rpf" style="width:${p}%"></div></div><span style="font-size:13px;color:var(--s400)">${re2?"▲":"▼"}</span></button>${re2?`<div class="rl2">${ri.length?ri:`<p style="font-size:12px;color:var(--s400);font-style:italic">No requirements.</p>`}</div>`:""}</div>${nt}<div class="qs" style="margin-top:10px"><label>Status:</label><select class="qss" onchange="updSt('${s.id}',this.value)">${Object.entries(SCFG).map(([k,v])=>`<option value="${k}" ${s.status===k?"selected":""}>${v.l}</option>`).join("")}</select></div><div class="ca">${s.link?`<a href="${esc(s.link)}" target="_blank" class="lbtn">🔗 Website</a>`:""}<div class="sp2"></div><button class="abtn ed" onclick="openEdit('${s.id}')">✏️ Edit</button><button class="abtn dl" onclick="delS('${s.id}')">🗑️</button></div></div>`;}return`<div class="card ${iu?"uc":""}" id="card-${s.id}"><div class="ch" onclick="togCard('${s.id}')"><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong>${esc(s.name)}</strong><span class="badge ${cfg.bc}">${cfg.l}</span><span class="p${s.priority}">P${s.priority}</span>${iu?`<span class="badge b-u">⚠️ Urgent</span>`:""}</div><div class="cm">${s.country?`<span>🌍 ${esc(s.country)}</span>`:""}${s.university?`<span>📚 ${esc(s.university)}</span>`:""}${s.deadline?chip(s.deadline):""}</div></div><div class="hp"><div class="hp-l">${p}% done</div><div class="hp-b"><div class="hp-f" style="width:${p}%"></div></div></div><span class="chv ${ex?"op":""}">▼</span></div>${body}</div>`;}
+function togCard(id){ec[id]=!ec[id];saveUI();renderList();}
+function togRq(id){er[id]=!er[id];saveUI();renderList();}
+function updRq(sid,rid,val){const s=scholarships.find(x=>x.id===sid);if(s){const r=(s.requirements||[]).find(x=>x.id===rid);if(r)r.status=val;saveScholarship(s);}updAlerts();renderAll();}
+function updSt(id,val){const s=scholarships.find(x=>x.id===id);if(s){s.status=val;saveScholarship(s);}updAlerts();renderAll();}
+function delS(id){if(!confirm("Delete this scholarship? This cannot be undone."))return;deleteFromDb(id);delete ec[id];delete er[id];saveUI();}
+function openAdd(){document.getElementById("eid").value="";document.getElementById("ft").textContent="➕ Add Scholarship";["fn","fco","fu","fp","fl","fsa","fos","fno"].forEach(i=>document.getElementById(i).value="");document.getElementById("fd").value="";document.getElementById("fpr").value="2";document.getElementById("fss").value="researching";document.getElementById("ftu").checked=false;document.getElementById("fst").checked=false;fr=[];renderFR();document.getElementById("fc2").classList.remove("hidden");document.getElementById("fn").focus();document.getElementById("fc2").scrollIntoView({behavior:"smooth"});}
+function openEdit(id){const s=scholarships.find(x=>x.id===id);if(!s)return;document.getElementById("eid").value=id;document.getElementById("ft").textContent="✏️ Edit";document.getElementById("fn").value=s.name;document.getElementById("fco").value=s.country||"";document.getElementById("fu").value=s.university||"";document.getElementById("fp").value=s.programme||"";document.getElementById("fd").value=s.deadline||"";document.getElementById("fpr").value=String(s.priority);document.getElementById("fss").value=s.status;document.getElementById("fl").value=s.link||"";document.getElementById("ftu").checked=!!s.tuitionCovered;document.getElementById("fst").checked=!!s.livingStipend;document.getElementById("fsa").value=s.stipendAmount||"";document.getElementById("fos").value=s.otherSupport||"";document.getElementById("fno").value=s.notes||"";fr=(s.requirements||[]).map(r=>({...r}));renderFR();document.getElementById("fc2").classList.remove("hidden");document.getElementById("fc2").scrollIntoView({behavior:"smooth"});}
+function closeForm(){document.getElementById("fc2").classList.add("hidden");fr=[];}
+function saveS(){const name=document.getElementById("fn").value.trim();if(!name){alert("Please enter a scholarship name.");return;}const eid=document.getElementById("eid").value;const id=eid||("s"+Date.now());const data={name,country:document.getElementById("fco").value.trim(),university:document.getElementById("fu").value.trim(),programme:document.getElementById("fp").value.trim(),deadline:document.getElementById("fd").value,priority:parseInt(document.getElementById("fpr").value),status:document.getElementById("fss").value,link:document.getElementById("fl").value.trim(),tuitionCovered:document.getElementById("ftu").checked,livingStipend:document.getElementById("fst").checked,stipendAmount:document.getElementById("fsa").value.trim(),otherSupport:document.getElementById("fos").value.trim(),notes:document.getElementById("fno").value.trim(),requirements:fr.map(r=>({...r}))};saveScholarship({id,...data});if(!eid)ec[id]=true;closeForm();saveUI();}
+function addFR(){fr.push({id:"fr"+Date.now(),name:"",status:"not_started",note:""});renderFR();}
+function remFR(id){fr=fr.filter(r=>r.id!==id);renderFR();}
+function updFR(id,f,val){const r=fr.find(x=>x.id===id);if(r)r[f]=val;}
+function renderFR(){const l=document.getElementById("frl"),e=document.getElementById("fre");if(!fr.length){l.innerHTML="";e.classList.remove("hidden");return;}e.classList.add("hidden");l.innerHTML=fr.map(r=>`<div class="rfi"><input value="${esc(r.name)}" placeholder="Requirement" oninput="updFR('${r.id}','name',this.value)"/><input value="${esc(r.note)}" placeholder="Note" oninput="updFR('${r.id}','note',this.value)"/><select onchange="updFR('${r.id}','status',this.value)"><option value="not_started" ${r.status==="not_started"?"selected":""}>Not started</option><option value="in_progress" ${r.status==="in_progress"?"selected":""}>In progress</option><option value="completed" ${r.status==="completed"?"selected":""}>Completed</option></select><button class="rrm" onclick="remFR('${r.id}')">✕</button></div>`).join("");}
+function renderAll(){renderList();if(cv==="summary")renderDash();}
+let lastDay=new Date().toISOString().slice(0,10);
+function tick(){updClk();scholarships.forEach(s=>{const el=document.getElementById("hms-"+s.id);if(!el||!s.deadline)return;const ms=msDD(s.deadline);if(ms<=0){el.textContent="⏱ Deadline passed!";return;}const ts=Math.floor(ms/1000),hh=Math.floor(ts/3600)%24,mm2=Math.floor(ts/60)%60,ss=ts%60;el.textContent=`⏱ ${String(hh).padStart(2,"0")}h ${String(mm2).padStart(2,"0")}m ${String(ss).padStart(2,"0")}s remaining`;});const td=new Date().toISOString().slice(0,10);if(td!==lastDay){lastDay=td;updAlerts();renderAll();checkNotifs();}}
+function schedMid(){setTimeout(()=>{checkNotifs();schedMid();},midMs()+1000);}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+updNBtn();setInterval(tick,1000);schedMid();
+</script>
+</body>
+</html>
